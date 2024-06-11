@@ -64,6 +64,8 @@ def create_bot(bot_type):
     elif bot_type == const.MOONSHOT:
         from bot.moonshot.moonshot_bot import MoonshotBot
         return MoonshotBot()
-
+    elif bot_type == const.TAOBAO:
+        from bot.taobao.taobao_api_bot import TaobaoAPIBot
+        return TaobaoAPIBot()
 
     raise RuntimeError

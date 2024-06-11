@@ -18,6 +18,7 @@ GEMINI = "gemini"
 ZHIPU_AI = "glm-4"
 MOONSHOT = "moonshot"
 
+TAOBAO = "taobao"
 
 # model
 CLAUDE3 = "claude-3-opus-20240229"
@@ -37,7 +38,7 @@ TTS_1_HD = "tts-1-hd"
 
 MODEL_LIST = ["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4", "wenxin", "wenxin-4", "xunfei", "claude", "claude-3-opus-20240229", "gpt-4-turbo",
               "gpt-4-turbo-preview", "gpt-4-1106-preview", GPT4_TURBO_PREVIEW, GPT4_TURBO_01_25, GPT_4o, QWEN, GEMINI, ZHIPU_AI, MOONSHOT,
-              QWEN_TURBO, QWEN_PLUS, QWEN_MAX, LINKAI_35, LINKAI_4_TURBO, LINKAI_4o]
+              QWEN_TURBO, QWEN_PLUS, QWEN_MAX, LINKAI_35, LINKAI_4_TURBO, LINKAI_4o,TAOBAO]
 
 # channel
 FEISHU = "feishu"

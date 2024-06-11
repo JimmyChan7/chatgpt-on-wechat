@@ -5,11 +5,20 @@ import signal
 import sys
 import time
 
+from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.blocking import BlockingScheduler
+
+from bridge.context import Context
+from bridge.reply import Reply, ReplyType
 from channel import channel_factory
+from channel.channel import Channel
 from common import const
 from config import load_config
 from plugins import *
 import threading
+
+from lib import itchat
+from taobao_bot_client import TaoBaoBotClient
 
 
 def sigterm_handler_wrap(_signo):
@@ -26,6 +35,7 @@ def sigterm_handler_wrap(_signo):
 
 
 def start_channel(channel_name: str):
+
     channel = channel_factory.create_channel(channel_name)
     if channel_name in ["wx", "wxy", "terminal", "wechatmp", "wechatmp_service", "wechatcom_app", "wework",
                         const.FEISHU, const.DINGTALK]:
@@ -37,8 +47,32 @@ def start_channel(channel_name: str):
             threading.Thread(target=linkai_client.start, args=(channel,)).start()
         except Exception as e:
             pass
+
+    taoBaoBotClient = TaoBaoBotClient()
+    scheduler = BackgroundScheduler()
+    # 每隔 5 秒执行一次
+    scheduler.add_job(auto_send_coupon, "interval", minutes=15,args=[taoBaoBotClient])
+    try:
+        scheduler.start()
+    except (KeyboardInterrupt, SystemExit):
+        pass
     channel.startup()
 
+
+def auto_send_coupon(taoBaoBotClient):
+    print(f'请求淘宝物料发送')
+    # 获取名字中含有特定字符的群聊，返回值为一个字典的列表
+    group=itchat.search_chatrooms(name='美丽精致捡漏群')[0]
+    group_name = group["UserName"]
+    taoBaoBotClient.getRecommend(group_name)
+    # itchat.send("请求淘宝物料发送",toUserName=group_name["UserName"])
+    # if obj is not None:
+    #     taoBaoBotClient.getRecommend()
+    #     reply = Reply(ReplyType.TEXT, "请求淘宝物料发送")
+    #     context = Context()
+    #     # context["receiver"] = "我的助力群"
+    #     context["receiver"] = group_name["UserName"]
+    #     obj.send(reply,context)
 
 def run():
     try:
