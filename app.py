@@ -51,7 +51,7 @@ def start_channel(channel_name: str):
     taoBaoBotClient = TaoBaoBotClient()
     scheduler = BackgroundScheduler()
     # 每隔 5 秒执行一次
-    scheduler.add_job(auto_send_coupon, "interval", minutes=15,args=[taoBaoBotClient])
+    scheduler.add_job(auto_send_coupon, "interval", minutes=15, misfire_grace_time=60,coalesce=True,max_instances=2,args=[taoBaoBotClient])
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
@@ -64,7 +64,8 @@ def auto_send_coupon(taoBaoBotClient):
     # 获取名字中含有特定字符的群聊，返回值为一个字典的列表
     group=itchat.search_chatrooms(name='美丽精致捡漏群')[0]
     group_name = group["UserName"]
-    taoBaoBotClient.getRecommend(group_name)
+    # taoBaoBotClient.getRecommend(group_name)
+    taoBaoBotClient.getCustomSearch(group_name)
     # itchat.send("请求淘宝物料发送",toUserName=group_name["UserName"])
     # if obj is not None:
     #     taoBaoBotClient.getRecommend()

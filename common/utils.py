@@ -28,11 +28,15 @@ def compress_imgfile(file, max_size):
     quality = 95
     while True:
         out_buf = io.BytesIO()
-        rgb_image.save(out_buf, "JPEG", quality=quality)
+        try:
+            rgb_image.save(out_buf, "JPEG", quality=quality)
+        except:
+            return out_buf
         if fsize(out_buf) <= max_size:
             return out_buf
         quality -= 5
-
+        if quality<1:
+            return out_buf
 
 def split_string_by_utf8_length(string, max_length, max_split=0):
     encoded = string.encode("utf-8")
